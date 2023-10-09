@@ -1,14 +1,19 @@
+import getCurrentUser from '../../actions/getCurrentUser'
 import DesktopSidebar from './DesktopSidebar'
+import MobileFooter from './MobileFooter'
 
 type Props = {
   children: React.ReactNode
 }
-export default function Sidebar ({ children }: Props) {
+export default async function Sidebar ({ children }: Props) {
+  const currentUser = getCurrentUser()
+
   return (
     <>
       <div className='h-full'>
         {/* DESKTOP SIDE BAR */}
-        <DesktopSidebar />
+        <DesktopSidebar currentUser={currentUser!} />
+        <MobileFooter currentUser={currentUser}/>
         <main className='lg:pl-20 h-full'>{children}</main>
       </div>
     </>

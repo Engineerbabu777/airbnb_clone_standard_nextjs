@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import useRoutes from '../../hooks/useRoutes'
 import DesktopItem from './DesktopItem'
+import Avatar from '../shared/Avatar'
 
-export default function DesktopSidebar ({}) {
+export default function DesktopSidebar ({ currentUser }: { currentUser: any }) {
   const routes = useRoutes()
   const [isOPen, setIsOpen] = useState(false)
 
@@ -14,9 +15,15 @@ export default function DesktopSidebar ({}) {
         <nav className='mt-4 flex flex-col justify-between'>
           <ul role='list' className='flex flex-col items-center space-y-1'>
             {routes.map((route, index) => (
-              <DesktopItem route={route} key={index}/>
+              <DesktopItem route={route} key={index} />
             ))}
           </ul>
+        </nav>
+
+        <nav className='mt-4 flex flex-col justify-between items-center'>
+          <div className='cursor-pointer hover:opacity-75 transition' onClick={() => setIsOpen(true)}>
+            <Avatar currentUser={currentUser}/>
+          </div>
         </nav>
       </div>
     </>
