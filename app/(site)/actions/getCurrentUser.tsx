@@ -7,7 +7,7 @@ export default async function getCurrentUser () {
     const session = await getSession()
 
     // CHECK IF SESSION USER EXISTS!
-    if (!session.user.email) {
+    if (!session?.user?.email) {
       return null
     }
 

@@ -7,14 +7,14 @@ export default async function getUsers () {
 
 
   // IF NO SESSION AVAILABLE
-  if(session?.user?.email){
+  if(!session?.user?.email){
     return [];
   }
 
   // ELSE !
 
   try {
-    const users = await     prisma.user.findMany({
+    const users = await prisma.user.findMany({
         orderBy:{
             createdAt:'desc',
         },
