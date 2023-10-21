@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import clsx from 'clsx'
 import { FullConversationType } from '@/app/types/index'
 import useOtherUser from '@/app/(site)/hooks/useOtherUsers'
+import Avatar from '@/app/(site)/components/shared/Avatar'
 
 type Props = {
   data: FullConversationType,
@@ -19,7 +20,7 @@ export default function ConversationBox ({ data, selected }: Props) {
 
   // WILL NAVIGATE TO SPECIFIC CHAT!
   const handlerClick = useCallback(() => {
-    router.push(`/conversations/${data.id}`)
+    router.push(`/conservations/${data.id}`)
   }, [data?.id, router])
 
   //   FUNCTION TO GET LAST MESSAGE!
@@ -86,8 +87,7 @@ export default function ConversationBox ({ data, selected }: Props) {
       {data.isGroup ? (<>g</>
         // <AvatarGroup users={data.users} />
       ) : (
-        <>s</>
-        // <Avatar user={otherUser} />
+        <Avatar user={otherUser} />
       )}
       <div className="min-w-0 flex-1">
         <div className="focus:outline-none">

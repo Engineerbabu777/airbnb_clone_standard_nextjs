@@ -8,11 +8,12 @@ export default function useConservation() {
 
     const params = useParams();
 
+    console.log('123-> ',params)
     const conservationId = useMemo(()=> {
-        if(!params?.conservationId) return ''
+        if(!params?.conversationId) return ''
 
-        return params.conservationId as string;
-    },[params?.conservationId]);
+        return params.conversationId as string;
+    },[params?.conversationId]);
 
     const isOpen = useMemo(() => !!conservationId,[conservationId]);
 

@@ -55,9 +55,7 @@ export default function ConservationLists ({ initialItems }: Props) {
               <MdOutlineGroupAdd size={20} />
             </div>
           </div>
-          <div>
-            123
-          </div>
+          
           {items.map((item) => (
             <ConversationBox
               key={item.id}
