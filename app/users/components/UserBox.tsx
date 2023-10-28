@@ -1,5 +1,6 @@
 'use client'
 
+import LoadingModal from '@/app/(site)/components/modal/LoadingModal'
 import Avatar from '@/app/(site)/components/shared/Avatar'
 import { User } from '@prisma/client'
 import axios from 'axios'
@@ -21,7 +22,7 @@ export default function UserBox ({ user }: Props) {
         userId: user?.id
       })
       .then((data: any) => {
-        router.push('/conservations' + data?.data.id)
+        router.push('/conservations/' + data?.data.id)
       })
       .catch((error: any) => {})
       .finally(() => {
@@ -30,6 +31,9 @@ export default function UserBox ({ user }: Props) {
   }, [user, router])
   return (
     <>
+       {isLoading && (
+        <LoadingModal />
+      )}
       <section
         onClick={handleClick}
         className='w-full relative flex items-center space-x-3 bg-white p-3 rounded-lg transition cursor-pointer hover:bg-neutral-100'

@@ -6,7 +6,7 @@ type Props = {
   children: React.ReactNode
 }
 export default async function Sidebar ({ children }: Props) {
-  const currentUser = getCurrentUser()
+  const currentUser = await getCurrentUser()
 
   return (
     <>

@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import { FullConversationType } from '@/app/types/index'
 import useOtherUser from '@/app/(site)/hooks/useOtherUsers'
 import Avatar from '@/app/(site)/components/shared/Avatar'
+import AvatarGroup from '@/app/(site)/components/shared/GroupAvatar'
 
 type Props = {
   data: FullConversationType,
@@ -84,8 +85,8 @@ export default function ConversationBox ({ data, selected }: Props) {
         selected ? 'bg-neutral-100' : 'bg-white'
       )}
     >
-      {data.isGroup ? (<>g</>
-        // <AvatarGroup users={data.users} />
+      {data.isGroup ? (
+        <AvatarGroup users={data.users} />
       ) : (
         <Avatar user={otherUser} />
       )}

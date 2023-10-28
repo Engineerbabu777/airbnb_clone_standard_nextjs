@@ -7,19 +7,24 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {MdOutlineGroupAdd} from 'react-icons/md';
 import ConversationBox from './ConservationBox'
+import GroupChatModal from '@/app/(site)/components/modal/GroupChatModal'
+import { User } from '@prisma/client'
 
 type Props = {
-  initialItems: FullConversationType[]
+  initialItems: FullConversationType[];
+  users: User[]
 }
 
-export default function ConservationLists ({ initialItems }: Props) {
+export default function ConservationLists ({ initialItems, users }: Props) {
   const [items, setItems] = useState(initialItems)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter()
 
   const { conservationId, isOpen } = useConservation()
 
   return (
     <>
+    <GroupChatModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} users={users}/>
       <aside
         className={clsx(
           `
@@ -41,7 +46,7 @@ export default function ConservationLists ({ initialItems }: Props) {
           <div className='flex justify-between mb-4 pt-4'>
             <div className='text-2xl font-bold text-neutral-800'>Messages</div>
             <div
-              // onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsModalOpen(true)}
               className='
                 rounded-full 
                 p-2 

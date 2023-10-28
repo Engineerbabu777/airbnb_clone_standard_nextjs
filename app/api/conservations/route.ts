@@ -8,6 +8,8 @@ export async function POST (req: Request) {
     const body = await req.json()
     const { userId, isGroup, members, name } = body
 
+    console.log(1)
+
     // IF CURRENT USER IS NOT AVAILABLE!
     if (!currentUser?.email || !currentUser?.id) {
       return NextResponse.json(
@@ -23,14 +25,19 @@ export async function POST (req: Request) {
 
     // IF DATA IS AVAILABLE FOT GROUP CONSERVATIONS THEN!
     if (isGroup) {
+      console.log(2)
       const newConservation = await prisma.conversation.create({
         data: {
           name,
           isGroup,
           users: {
             connect: [
-              ...members.map((member: { value: string }) => ({ id: member })),
-              { id: currentUser?.id }
+              ...members.map((member: { value: string }) => ({
+                id: member.value
+              })),
+              {
+                id: currentUser.id
+              }
             ]
           }
         },
@@ -38,6 +45,7 @@ export async function POST (req: Request) {
           users: true
         }
       })
+      console.log(3)
 
       return NextResponse.json(newConservation)
     }

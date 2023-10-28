@@ -13,6 +13,8 @@ import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
 // import useActiveList from "@/app/hooks/useActiveList";
 import useOtherUser from "@/app/(site)/hooks/useOtherUsers";
 import Avatar from "@/app/(site)/components/shared/Avatar";
+import ProfileDrawer from "./ProfileDrawer";
+import AvatarGroup from "@/app/(site)/components/shared/GroupAvatar";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -42,11 +44,11 @@ const Header: React.FC<HeaderProps> = ({
 
   return ( 
     <>
-      {/* <ProfileDrawer
+      <ProfileDrawer
         data={conversation}
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-      /> */}
+      />
       <div
         className="
           bg-white
@@ -77,8 +79,7 @@ const Header: React.FC<HeaderProps> = ({
             <HiChevronLeft size={32} />
           </Link>
           {conversation?.isGroup ? (
-            <>G</>
-            // <AvatarGroup users={conversation.users} />
+            <AvatarGroup users={conversation.users} />
           ) : (
             <Avatar user={otherUser} />
           )}

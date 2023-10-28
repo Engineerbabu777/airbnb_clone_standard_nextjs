@@ -22,6 +22,8 @@ export default async function getCurrentUser () {
         return null;
     }
 
+    console.log('USER: ',currentUser);
+
     return currentUser;
 
 
