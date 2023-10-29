@@ -15,6 +15,7 @@ import useOtherUser from "@/app/(site)/hooks/useOtherUsers";
 import Avatar from "@/app/(site)/components/shared/Avatar";
 import ProfileDrawer from "./ProfileDrawer";
 import AvatarGroup from "@/app/(site)/components/shared/GroupAvatar";
+import useActiveList from "@/app/(site)/hooks/useActiveList";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -28,17 +29,16 @@ const Header: React.FC<HeaderProps> = ({
   const otherUser = useOtherUser(conversation);
   const [drawerOpen, setDrawerOpen] = useState(false);
   
-//   const { members } = useActiveList();
-//   const isActive = members.indexOf(otherUser?.email! as any) !== -1;
+  const { members } = useActiveList();
+  const isActive = members.indexOf(otherUser?.email! as any) !== -1;
 
   const statusText = useMemo(() => {
     if (conversation?.isGroup) {
       return `${conversation?.users?.length} members`;
     }
     
-    return 'Active'
-    // return isActive ? 'Active' : 'Offline';
-  }, [conversation]);
+    return isActive ? 'Active' : 'Offline';
+  }, [conversation,isActive]);
 
   console.log('BC-> ', conversation, otherUser)
 

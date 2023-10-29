@@ -4,27 +4,86 @@ import useConservation from '@/app/(site)/hooks/useConservation'
 import { FullConversationType } from '@/app/types'
 import clsx from 'clsx'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import {MdOutlineGroupAdd} from 'react-icons/md';
+import { useEffect, useMemo, useState } from 'react'
+import { MdOutlineGroupAdd } from 'react-icons/md'
 import ConversationBox from './ConservationBox'
 import GroupChatModal from '@/app/(site)/components/modal/GroupChatModal'
 import { User } from '@prisma/client'
+import { pusherClient } from '@/app/libs/pusher'
+import { find } from 'lodash'
+import { useSession } from 'next-auth/react'
 
 type Props = {
-  initialItems: FullConversationType[];
+  initialItems: FullConversationType[],
   users: User[]
 }
 
 export default function ConservationLists ({ initialItems, users }: Props) {
   const [items, setItems] = useState(initialItems)
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const router = useRouter()
 
   const { conservationId, isOpen } = useConservation()
+  const session = useSession()
+
+  const pusherKey = useMemo(() => {
+    return session.data?.user?.email
+  }, [session.data?.user?.email])
+
+  useEffect(() => {
+    if (!pusherKey) {
+      return
+    }
+
+    pusherClient.subscribe(pusherKey)
+
+    const updateHandler = (conversation: FullConversationType) => {
+      setItems(current =>
+        current.map(currentConversation => {
+          if (currentConversation.id === conversation.id) {
+            return {
+              ...currentConversation,
+              messages: conversation.messages
+            }
+          }
+
+          return currentConversation
+        })
+      )
+    }
+
+    const newHandler = (conversation: FullConversationType) => {
+      setItems(current => {
+        if (find(current, { id: conversation.id })) {
+          return current
+        }
+
+        return [conversation, ...current]
+      })
+    }
+
+    const removeHandler = (conversation: FullConversationType) => {
+      setItems(current => {
+        return [...current.filter(convo => convo.id !== conversation.id)]
+      })
+
+      if(conservationId === conversation.id){
+        router.push('/conservations')
+      }
+    }
+
+    pusherClient.bind('conversation:update', updateHandler)
+    pusherClient.bind('conversation:new', newHandler)
+    pusherClient.bind('conversation:remove', removeHandler)
+  }, [pusherKey, router,conservationId])
 
   return (
     <>
-    <GroupChatModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} users={users}/>
+      <GroupChatModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        users={users}
+      />
       <aside
         className={clsx(
           `
@@ -60,8 +119,8 @@ export default function ConservationLists ({ initialItems, users }: Props) {
               <MdOutlineGroupAdd size={20} />
             </div>
           </div>
-          
-          {items.map((item) => (
+
+          {items.map(item => (
             <ConversationBox
               key={item.id}
               data={item}

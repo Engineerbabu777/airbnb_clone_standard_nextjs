@@ -1,6 +1,7 @@
 import getCurrentUser from '@/app/(site)/actions/getCurrentUser'
 import prisma from '../../libs/prismaDB'
 import { NextResponse } from 'next/server'
+import { pusherServer } from '@/app/libs/pusher'
 
 export async function POST (req: Request) {
   try {
@@ -47,6 +48,13 @@ export async function POST (req: Request) {
       })
       console.log(3)
 
+      // Update all connections with new conversation
+      newConservation.users.forEach(user => {
+        if (user.email) {
+          pusherServer.trigger(user.email, 'conversation:new', newConservation)
+        }
+      })
+
       return NextResponse.json(newConservation)
     }
 
@@ -82,6 +90,13 @@ export async function POST (req: Request) {
       },
       include: {
         users: true
+      }
+    })
+
+    // Update all connections with new conversation
+    newConservation.users.forEach(user => {
+      if (user.email) {
+        pusherServer.trigger(user.email, 'conversation:new', newConservation)
       }
     })
 
